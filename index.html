@@ -20,7 +20,7 @@
   }
   .wrap{width:100%;max-width:480px;margin:auto;display:flex;flex-direction:column;gap:16px}
   .brandbar{display:flex;flex-direction:column;align-items:center;gap:8px}
-  .brandbar img{width:60px;height:60px}
+  .brandbar img{width:60px;height:60px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.28)}
   .tag{font-size:10.5px;letter-spacing:3px;color:var(--muted);font-weight:700;text-transform:uppercase}
   .progress{height:5px;background:#242529;border-radius:99px;overflow:hidden}
   .progress>i{display:block;height:100%;width:0;background:var(--white);transition:width .35s ease;border-radius:99px}
@@ -85,8 +85,9 @@
       <section class="step" data-step="2"><div class="pad">
         <h2>How old is your athlete?</h2>
         <p class="sub small">We tailor every session to their age and stage.</p>
-        <button class="opt" data-field="age_group" data-val="6-9">6 – 9 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="10-14">10 – 14 years <span class="arw">→</span></button>
+        <button class="opt" data-field="age_group" data-val="6-8">6 – 8 years <span class="arw">→</span></button>
+        <button class="opt" data-field="age_group" data-val="9-11">9 – 11 years <span class="arw">→</span></button>
+        <button class="opt" data-field="age_group" data-val="12-14">12 – 14 years <span class="arw">→</span></button>
         <button class="opt" data-field="age_group" data-val="15+">15+ years <span class="arw">→</span></button>
         <button class="back" data-back>← Back</button>
       </div></section>

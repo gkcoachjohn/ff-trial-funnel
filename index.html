@@ -7,14 +7,14 @@
 <meta name="description" content="Precision. Passion. Performance. Nashville's youth soccer academy — book your child's trial session at Futbol Factory.">
 <style>
   :root{
-    --navy:#0d1420; --navy2:#131d2c; --card:#141f30; --line:#26344a;
-    --txt:#f3f6fb; --muted:#9fb1cc; --white:#ffffff; --radius:16px;
+    --bg:#0a0a0c; --surface:#141517; --card1:#1a1b1e; --card2:#111214; --line:#2c2e33;
+    --txt:#f4f4f6; --muted:#a6a9b0; --white:#ffffff; --radius:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:radial-gradient(1100px 520px at 50% -8%, #1a2740 0%, var(--navy) 58%);
+    background:radial-gradient(1100px 520px at 50% -8%, #1c1d20 0%, var(--bg) 58%);
     color:var(--txt);min-height:100dvh;display:flex;flex-direction:column;align-items:center;
     padding:18px 14px calc(20px + env(safe-area-inset-bottom));line-height:1.45;
   }
@@ -22,10 +22,10 @@
   .brandbar{display:flex;flex-direction:column;align-items:center;gap:8px}
   .brandbar img{width:60px;height:60px}
   .tag{font-size:10.5px;letter-spacing:3px;color:var(--muted);font-weight:700;text-transform:uppercase}
-  .progress{height:5px;background:#1a2740;border-radius:99px;overflow:hidden}
+  .progress{height:5px;background:#242529;border-radius:99px;overflow:hidden}
   .progress>i{display:block;height:100%;width:0;background:var(--white);transition:width .35s ease;border-radius:99px}
-  .card{background:linear-gradient(180deg,#16233a,#0f1826);border:1px solid var(--line);border-radius:var(--radius);
-    overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .card{background:linear-gradient(180deg,var(--card1),var(--card2));border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5)}
   .pad{padding:24px 22px 24px}
   .hero-img{width:100%;height:190px;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
   .step{display:none;animation:fade .35s ease}
@@ -36,28 +36,28 @@
   .sub{color:var(--muted);font-size:15px;margin-bottom:20px}
   .sub.small{margin-bottom:18px}
   .trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-  .trust span{font-size:12px;color:var(--muted);background:#0f1a2c;border:1px solid var(--line);padding:6px 11px;border-radius:99px}
+  .trust span{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:6px 11px;border-radius:99px}
   .btn{display:block;width:100%;border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:17px;
-    padding:16px;border-radius:12px;background:var(--white);color:var(--navy);transition:transform .08s ease,opacity .2s}
+    padding:16px;border-radius:12px;background:var(--white);color:#000;transition:transform .08s ease,opacity .2s}
   .btn:active{transform:scale(.98)}
   .btn:disabled{opacity:.6;cursor:default}
   .opt{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;cursor:pointer;
-    background:#0f1a2c;border:1.5px solid var(--line);color:var(--txt);font-family:inherit;font-weight:700;font-size:16px;
+    background:var(--surface);border:1.5px solid var(--line);color:var(--txt);font-family:inherit;font-weight:700;font-size:16px;
     padding:16px 18px;border-radius:12px;margin-bottom:11px;transition:border-color .15s,background .15s,transform .08s}
-  .opt:hover{border-color:#42618f;background:#132239}
+  .opt:hover{border-color:#4a4d55;background:#1c1d20}
   .opt:active{transform:scale(.99)}
   .opt .arw{color:var(--muted);font-size:18px}
   label{display:block;font-size:13px;color:var(--muted);font-weight:700;margin:14px 0 6px}
-  input{width:100%;font-family:inherit;font-size:16px;color:var(--txt);background:#0e1a2d;border:1.5px solid var(--line);border-radius:11px;padding:14px}
-  input:focus{outline:none;border-color:#6f8fc4}
-  input::placeholder{color:#5f7099}
+  input{width:100%;font-family:inherit;font-size:16px;color:var(--txt);background:#101113;border:1.5px solid var(--line);border-radius:11px;padding:14px}
+  input:focus{outline:none;border-color:#7d818b}
+  input::placeholder{color:#6b6f77}
   .row{display:flex;gap:10px}.row>div{flex:1}
   .back{background:none;border:0;color:var(--muted);font-family:inherit;font-size:14px;cursor:pointer;margin-top:14px;padding:6px}
-  .fine{color:#6f83a6;font-size:11.5px;text-align:center;margin-top:8px}
-  .quote{background:#0f1a2c;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;color:#d6e0f0}
+  .fine{color:#767a82;font-size:11.5px;text-align:center;margin-top:8px}
+  .quote{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;color:#dcdde0}
   .quote b{color:var(--white)}
   .tick{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
-  .err{color:#fca5a5;font-size:13px;margin-top:10px;display:none}
+  .err{color:#f2a3a3;font-size:13px;margin-top:10px;display:none}
   .center{text-align:center}
 </style>
 </head>
@@ -86,8 +86,8 @@
         <h2>How old is your athlete?</h2>
         <p class="sub small">We tailor every session to their age and stage.</p>
         <button class="opt" data-field="age_group" data-val="6-9">6 – 9 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="10-13">10 – 13 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="14+">14+ years <span class="arw">→</span></button>
+        <button class="opt" data-field="age_group" data-val="10-14">10 – 14 years <span class="arw">→</span></button>
+        <button class="opt" data-field="age_group" data-val="15+">15+ years <span class="arw">→</span></button>
         <button class="back" data-back>← Back</button>
       </div></section>
 
@@ -118,13 +118,13 @@
         <p class="sub small">We'll text you to lock in your trial time.</p>
         <form id="leadForm" novalidate>
           <div class="row">
-            <div><label>First name</label><input name="first_name" autocomplete="given-name" required></div>
-            <div><label>Last name</label><input name="last_name" autocomplete="family-name" required></div>
+            <div><label>Your first name</label><input name="first_name" autocomplete="given-name" required></div>
+            <div><label>Your last name</label><input name="last_name" autocomplete="family-name" required></div>
           </div>
           <label>Email</label><input name="email" type="email" autocomplete="email" required>
           <label>Phone</label><input name="phone" type="tel" autocomplete="tel" required>
-          <label>Child's first name <span style="color:#5f7099">(optional)</span></label><input name="child_name">
-          <div class="err" id="err">Please add your name, email, and phone.</div>
+          <label>Child's first name</label><input name="child_name" placeholder="So we can personalize your session" required>
+          <div class="err" id="err">Please fill in every field, including your child's name.</div>
           <button class="btn" type="submit" id="submitBtn" style="margin-top:20px">Book My Trial Session</button>
           <p class="fine">By submitting you agree to be contacted about training. No spam, ever.</p>
         </form>
@@ -164,8 +164,8 @@
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var fd=new FormData(form);
-    var first=(fd.get("first_name")||"").trim(),last=(fd.get("last_name")||"").trim(),email=(fd.get("email")||"").trim(),phone=(fd.get("phone")||"").trim();
-    if(!first||!last||!email||!phone||email.indexOf("@")<0){errEl.style.display="block";return;}
+    var first=(fd.get("first_name")||"").trim(),last=(fd.get("last_name")||"").trim(),email=(fd.get("email")||"").trim(),phone=(fd.get("phone")||"").trim(),child=(fd.get("child_name")||"").trim();
+    if(!first||!last||!email||!phone||!child||email.indexOf("@")<0){errEl.style.display="block";return;}
     errEl.style.display="none";
     ["first_name","last_name","email","phone","child_name"].forEach(function(k){if(fd.get(k))data[k]=(fd.get(k)+"").trim();});
     btn.disabled=true;btn.textContent="Booking…";

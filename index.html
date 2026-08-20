@@ -161,6 +161,74 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
   </div>
 
 <script>
+/* ---------- funnel analytics (fire-and-forget; never blocks the form) ---------- */
+var FF = (function(){
+  var ENDPOINT = "https://fsbzdnstyvsyirlcyjiw.supabase.co/functions/v1/ff-track";
+  var STEP_NAMES = {1:"Landing",2:"Age",3:"Level",4:"Location",5:"Contact form",6:"Submitted"};
+  var t0 = Date.now(), queue = [], timer = null, sent = false, ctx = {}, sid = "";
+
+  function uuid(){
+    try{ if(crypto && crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){
+      var r = Math.random()*16|0; return (c==="x"?r:(r&0x3|0x8)).toString(16);
+    });
+  }
+
+  try{
+    sid = uuid();
+    var q = new URLSearchParams(location.search);
+    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term",
+     "fbclid","ad_id","adset_id","campaign_id"].forEach(function(k){
+      var v = q.get(k); if(v) ctx[k] = v;
+    });
+    if(!ctx.utm_source) ctx.utm_source = "facebook";
+    ctx.funnel     = "ff-trial-funnel";
+    ctx.referrer   = document.referrer || null;
+    ctx.viewport_w = window.innerWidth || null;
+    ctx.device     = (window.innerWidth || 1024) < 768 ? "mobile"
+                   : (window.innerWidth < 1024 ? "tablet" : "desktop");
+  }catch(e){}
+
+  function flush(useBeacon){
+    if(!queue.length) return;
+    var payload = JSON.stringify({session_id:sid, ctx:ctx, events:queue});
+    queue = [];
+    if(timer){ clearTimeout(timer); timer = null; }
+    try{
+      // text/plain keeps this a "simple" request: no CORS preflight, no latency.
+      if(useBeacon && navigator.sendBeacon){
+        navigator.sendBeacon(ENDPOINT, new Blob([payload], {type:"text/plain"}));
+      }else{
+        fetch(ENDPOINT, {method:"POST", body:payload, keepalive:true,
+                         headers:{"Content-Type":"text/plain"}}).catch(function(){});
+      }
+    }catch(e){}
+  }
+
+  function track(event, props){
+    try{
+      var e = props || {};
+      e.event = event;
+      e.ms_since_start = Date.now() - t0;
+      if(e.step && !e.step_name) e.step_name = STEP_NAMES[e.step] || null;
+      queue.push(e);
+      if(queue.length >= 10) flush(false);
+      else if(!timer) timer = setTimeout(function(){ flush(false); }, 2000);
+    }catch(err){}
+  }
+
+  // Flush whatever is buffered the moment the visitor leaves.
+  try{
+    window.addEventListener("pagehide", function(){ if(!sent){ sent = true; flush(true); } });
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState === "hidden") flush(true);
+    });
+  }catch(e){}
+
+  return {track:track, sid:function(){ return sid; }, flush:flush};
+})();
+
+/* ---------- funnel ---------- */
   var WEBHOOK = "https://futbolfactory.app.n8n.cloud/webhook/ff-perspective-lead";
   var data = {};
   (function(){
@@ -169,23 +237,39 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
       var v=q.get(k); if(v) data[k]=v;
     });
     if(!data.utm_source) data.utm_source="facebook";
+    data.ff_session_id = FF.sid();
   })();
-  var steps=[].slice.call(document.querySelectorAll(".step")), total=steps.length, cur=1;
+
+  FF.track("page_view", {step:1});
+
+  var steps=[].slice.call(document.querySelectorAll(".step")), total=steps.length, cur=1, deepest=1;
   function show(n){cur=n;steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
     document.getElementById("bar").style.width=Math.round((n-1)/(total-1)*100)+"%";
-    window.scrollTo({top:0,behavior:"smooth"});}
+    window.scrollTo({top:0,behavior:"smooth"});
+    if(n>deepest){ deepest=n; FF.track("step_view",{step:n}); }}
   document.querySelectorAll("[data-next]").forEach(function(b){b.onclick=function(){show(cur+1);};});
-  document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){show(cur-1);};});
-  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){data[b.dataset.field]=b.dataset.val;show(cur+1);};});
+  document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){FF.track("back",{step:cur});show(cur-1);};});
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    data[b.dataset.field]=b.dataset.val;
+    FF.track("answer",{step:cur, field:b.dataset.field, value:b.dataset.val});
+    show(cur+1);};});
   var form=document.getElementById("leadForm"),errEl=document.getElementById("err"),btn=document.getElementById("submitBtn");
+  var formStarted=false;
+  form.addEventListener("focusin",function(){ if(!formStarted){ formStarted=true; FF.track("form_start",{step:5}); } });
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var fd=new FormData(form);
     var first=(fd.get("first_name")||"").trim(),last=(fd.get("last_name")||"").trim(),email=(fd.get("email")||"").trim(),phone=(fd.get("phone")||"").trim(),child=(fd.get("child_name")||"").trim();
-    if(!first||!last||!email||!phone||!child||email.indexOf("@")<0){errEl.style.display="block";return;}
+    FF.track("submit_attempt",{step:5});
+    if(!first||!last||!email||!phone||!child||email.indexOf("@")<0){
+      errEl.style.display="block";
+      FF.track("submit_error",{step:5, value:"validation"});
+      return;}
     errEl.style.display="none";
     ["first_name","last_name","email","phone","child_name"].forEach(function(k){if(fd.get(k))data[k]=(fd.get(k)+"").trim();});
     try{if(window.fbq)fbq("track","Lead");}catch(e){}
+    FF.track("submit_success",{step:6});
+    FF.flush(false);
     btn.disabled=true;btn.textContent="Booking…";
     fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)}).catch(function(){}).finally(function(){show(6);});
   });

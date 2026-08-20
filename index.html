@@ -228,7 +228,7 @@ var FF = (function(){
   var ENDPOINT = "https://fsbzdnstyvsyirlcyjiw.supabase.co/functions/v1/ff-track";
   var STEP_NAMES = {1:"Landing",2:"Age",3:"Level",4:"Area",5:"Commitment",
                     6:"Contact form",7:"Submitted",8:"Not a fit"};
-  var t0 = Date.now(), queue = [], timer = null, sent = false, ctx = {}, sid = "";
+  var t0 = Date.now(), queue = [], timer = null, sent = false, ctx = {}, sid = "", ident = null;
 
   // Meta encodes url_tags values, then encodes the whole string again, so a
   // campaign name arrives as "FF+Trial+%E2%80%94+..." after one decode pass.
@@ -263,8 +263,10 @@ var FF = (function(){
   }catch(e){}
 
   function flush(useBeacon){
-    if(!queue.length) return;
-    var payload = JSON.stringify({session_id:sid, ctx:ctx, events:queue});
+    if(!queue.length && !ident) return;
+    var body = {session_id:sid, ctx:ctx, events:queue};
+    if(ident){ body.identity = ident; ident = null; }
+    var payload = JSON.stringify(body);
     queue = [];
     if(timer){ clearTimeout(timer); timer = null; }
     try{
@@ -298,7 +300,9 @@ var FF = (function(){
     });
   }catch(e){}
 
-  return {track:track, sid:function(){ return sid; }, flush:flush, tidy:tidy};
+  function identify(o){ try{ ident = o; }catch(e){} }
+
+  return {track:track, sid:function(){ return sid; }, flush:flush, tidy:tidy, identify:identify};
 })();
 
 /* ---------- funnel ---------- */
@@ -365,11 +369,17 @@ var FF = (function(){
       return;}
     errEl.style.display="none";
     ["first_name","last_name","email","phone","child_name"].forEach(function(k){if(fd.get(k))data[k]=(fd.get(k)+"").trim();});
-    try{if(window.fbq)fbq("track","Lead");}catch(e){}
+    // Same id on the browser pixel and the server-side event, so Meta counts one Lead, not two.
+    var eid = FF.sid();
+    try{ if(window.fbq) fbq("track","Lead",{},{eventID:eid}); }catch(e){}
+    FF.identify({event_id:eid, email:email, phone:phone,
+                 first_name:first, last_name:last, child_name:child});
     FF.track("submit_success",{step:7});
-    FF.flush(false);
     btn.disabled=true;btn.textContent="Booking…";
-    fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)}).catch(function(){}).finally(function(){show(7);});
+    fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)})
+      .then(function(r){ if(!r.ok) FF.track("webhook_error",{step:7,value:"http_"+r.status}); })
+      .catch(function(){ FF.track("webhook_error",{step:7,value:"network"}); })
+      .finally(function(){ FF.flush(false); show(7); });
   });
 </script>
 </body>

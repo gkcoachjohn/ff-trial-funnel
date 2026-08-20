@@ -358,14 +358,30 @@ var FF = (function(){
   var form=document.getElementById("leadForm"),errEl=document.getElementById("err"),btn=document.getElementById("submitBtn");
   var formStarted=false;
   form.addEventListener("focusin",function(){ if(!formStarted){ formStarted=true; FF.track("form_start",{step:6}); } });
+  var submitting=false;
   form.addEventListener("submit",function(e){
     e.preventDefault();
+    if(submitting) return;          // a fast double-tap must not create two leads
     var fd=new FormData(form);
     var first=(fd.get("first_name")||"").trim(),last=(fd.get("last_name")||"").trim(),email=(fd.get("email")||"").trim(),phone=(fd.get("phone")||"").trim(),child=(fd.get("child_name")||"").trim();
     FF.track("submit_attempt",{step:6});
-    if(!first||!last||!email||!phone||!child||email.indexOf("@")<0){
+
+    // A lead we cannot contact is a lead lost silently, so check properly and
+    // record WHICH field failed - "validation" alone never told us anything.
+    var bad = [];
+    if(!first) bad.push("first_name");
+    if(!last)  bad.push("last_name");
+    if(!child) bad.push("child_name");
+    if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) bad.push("email");
+    if((phone.replace(/\D/g,"").length) < 10)          bad.push("phone");
+    if(bad.length){
+      errEl.textContent = bad.indexOf("email") > -1 && bad.length === 1
+        ? "That email address doesn\u2019t look right \u2014 please check it."
+        : bad.indexOf("phone") > -1 && bad.length === 1
+        ? "Please enter a full phone number so we can text you."
+        : "Please fill in every field, including your child\u2019s name.";
       errEl.style.display="block";
-      FF.track("submit_error",{step:6, value:"validation"});
+      FF.track("submit_error",{step:6, value:bad.join("+")});
       return;}
     errEl.style.display="none";
     ["first_name","last_name","email","phone","child_name"].forEach(function(k){if(fd.get(k))data[k]=(fd.get(k)+"").trim();});
@@ -374,6 +390,7 @@ var FF = (function(){
     try{ if(window.fbq) fbq("track","Lead",{},{eventID:eid}); }catch(e){}
     FF.identify({event_id:eid, email:email, phone:phone,
                  first_name:first, last_name:last, child_name:child});
+    submitting=true;
     FF.track("submit_success",{step:7});
     btn.disabled=true;btn.textContent="Booking…";
     fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)})

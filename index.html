@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Futbol Factory — Book Your Trial Session</title>
 <meta name="description" content="Precision. Passion. Performance. Nashville's youth soccer academy — book your child's trial session at Futbol Factory.">
+<link rel="canonical" href="https://trial.futbol-factory.com/">
+<meta name="theme-color" content="#0a0a0c">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Futbol Factory">
+<meta property="og:url" content="https://trial.futbol-factory.com/">
+<meta property="og:title" content="Claim a Trial Session at Futbol Factory">
+<meta property="og:description" content="One hour, one-on-one with a Futbol Factory coach in Nashville. They&#39;ll assess where your child is now and build a plan from there.">
+<meta property="og:image" content="https://trial.futbol-factory.com/img/hero.jpg">
+<meta property="og:image:width" content="1000">
+<meta property="og:image:height" content="666">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claim a Trial Session at Futbol Factory">
+<meta name="twitter:description" content="One hour, one-on-one with a Futbol Factory coach in Nashville.">
+<meta name="twitter:image" content="https://trial.futbol-factory.com/img/hero.jpg">
 <style>
   :root{
     --bg:#0a0a0c; --surface:#141517; --card1:#1a1b1e; --card2:#111214; --line:#2c2e33;
@@ -71,6 +87,7 @@
     padding:15px;border-radius:12px;background:var(--surface);color:var(--txt);border:1.5px solid var(--line);margin-top:14px}
   .midimg{width:100%;height:176px;object-fit:cover;border-radius:10px;display:block;border:1px solid var(--line);margin-top:16px}
 </style>
+<link rel="preconnect" href="https://connect.facebook.net" crossorigin>
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -176,7 +193,7 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
           <button class="btn" type="submit" id="submitBtn" style="margin-top:20px">Claim My Child&rsquo;s Session</button>
           <p class="fine">By submitting you agree to be contacted about training. No spam, ever.</p>
         </form>
-        <img class="midimg" src="img/facility.jpg" loading="lazy" alt="Players training at the Futbol Factory facility in Nashville" style="object-position:center 58%">
+        <img class="midimg" data-src="img/facility.jpg" alt="Players training at the Futbol Factory facility in Nashville" style="object-position:center 58%">
         <div class="quotes">
           <div class="quote">&ldquo;I can tell he&rsquo;s implementing things he&rsquo;s learning from you. I saw it in his warm up Sunday before the game. <b>He loves coming!</b>&rdquo;<cite>&mdash; parent of Malcolm, age 12</cite></div>
           <div class="quote">&ldquo;Coach Regan helped me improve my foot skills and taught me how to shoot, and I was even able to <b>score a game winning goal</b> during my season!&rdquo;<cite>&mdash; Logan, age 9</cite></div>
@@ -189,7 +206,7 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
         <div class="tick">&#10003;</div>
         <h2>Congratulations &mdash; you&rsquo;re accepted!</h2>
         <p class="sub">We&rsquo;ll reach out shortly to schedule your trial session. Just reply <strong>YES</strong> to that first text and you&rsquo;ll be talking to a human.</p>
-        <img src="img/strike.jpg" loading="lazy" alt="A Futbol Factory player striking a ball" style="width:100%;height:200px;object-fit:cover;object-position:center 55%;border-radius:12px;margin-top:6px">
+        <img data-src="img/strike.jpg" alt="A Futbol Factory player striking a ball" style="width:100%;height:200px;object-fit:cover;object-position:center 55%;border-radius:12px;margin-top:6px">
       </div></section>
 
       <!-- STEP 8 — NOT A FIT (no lead event, no CRM record) -->
@@ -290,7 +307,14 @@ var FF = (function(){
 
   var steps=[].slice.call(document.querySelectorAll(".step"));
   var LAST=7, DQ=8, cur=1, deepest=1;   // step 8 is the not-a-fit screen, not part of the funnel
-  function show(n){cur=n;steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
+  function loadImgs(n){
+    var sec=document.querySelector('.step[data-step="'+n+'"]');
+    if(!sec) return;
+    sec.querySelectorAll("img[data-src]").forEach(function(i){
+      i.src=i.dataset.src; i.removeAttribute("data-src");
+    });
+  }
+  function show(n){cur=n;loadImgs(n);steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
     var pr=document.getElementById("bar").parentNode;
     if(n===DQ){ pr.style.visibility="hidden"; }
     else { pr.style.visibility="visible";
@@ -300,6 +324,7 @@ var FF = (function(){
 
   // Turn someone away: no lead event, no CRM record, nothing sent to Meta.
   function disqualify(reason){
+    loadImgs(DQ);
     FF.track("disqualified",{step:cur, field:"reason", value:reason});
     FF.flush(false);
     steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===DQ);});

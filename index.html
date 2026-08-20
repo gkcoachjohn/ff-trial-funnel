@@ -59,6 +59,17 @@
   .tick{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
   .err{color:#f2a3a3;font-size:13px;margin-top:10px;display:none}
   .center{text-align:center}
+  .proof{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .proof div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 8px;text-align:center}
+  .proof b{display:block;font-size:17px;font-weight:800;color:var(--white);letter-spacing:-.3px}
+  .proof span{font-size:10.5px;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+  .quotes{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+  .quotes .quote{margin-top:0}
+  .quote cite{display:block;font-style:normal;color:var(--muted);font-size:12.5px;margin-top:7px}
+  .softout .tick{border-color:#8b8f98;color:#c9ccd2;font-size:26px}
+  .linkbtn{display:block;width:100%;text-align:center;text-decoration:none;font-weight:800;font-size:16px;
+    padding:15px;border-radius:12px;background:var(--surface);color:var(--txt);border:1.5px solid var(--line);margin-top:14px}
+  .midimg{width:100%;height:150px;object-fit:cover;border-radius:10px;display:block;border:1px solid var(--line);margin-top:16px}
 </style>
 <!-- Meta Pixel -->
 <script>
@@ -86,53 +97,72 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
     <div class="progress"><i id="bar"></i></div>
 
     <div class="card">
-      <!-- STEP 1 -->
+      <!-- STEP 1 — LANDING -->
       <section class="step active" data-step="1">
-        <img class="hero-img" src="img/hero.jpg" alt="Futbol Factory Nashville team">
+        <img class="hero-img" src="img/hero.jpg" alt="Futbol Factory Nashville players and coaches">
         <div class="pad">
-          <h1>Is your child ready to level up their game?</h1>
-          <p class="sub">Personalized, game-like training that builds skill, confidence, and character. Nashville's youth academy trains <strong>120+ players a week</strong> — come see the difference.</p>
-          <button class="btn" data-next>Claim My Trial Session →</button>
-          <div class="trust"><span>⚽ Personalized coaching</span><span>👥 Small groups</span><span>📈 All levels welcome</span></div>
+          <h1>Claim Your Child&rsquo;s Trial Session</h1>
+          <p class="sub">One hour, one-on-one with a Futbol Factory coach. They&rsquo;ll assess where your child is right now and build a plan from there. Nashville&rsquo;s youth soccer academy, training 120+ players a week.</p>
+          <button class="btn" data-next>Claim My Trial Session &rarr;</button>
+          <div class="proof">
+            <div><b>120+</b><span>players trained weekly</span></div>
+            <div><b>2</b><span>Nashville locations</span></div>
+            <div><b>6&ndash;18</b><span>ages we train</span></div>
+          </div>
+          <img class="midimg" src="img/action.jpg" alt="A Futbol Factory player working through a dribbling drill">
+          <div class="quotes">
+            <div class="quote">&ldquo;Best investment we&rsquo;ve made &mdash; our son&rsquo;s skill and confidence jumped in the <b>first month</b>.&rdquo;<cite>&mdash; Futbol Factory parent</cite></div>
+          </div>
+          <div class="trust"><span>&#9917; Private &amp; small group</span><span>&#128100; Custom plan per player</span><span>&#128241; App access included</span></div>
         </div>
       </section>
 
-      <!-- STEP 2 -->
+      <!-- STEP 2 — AGE (no exit) -->
       <section class="step" data-step="2"><div class="pad">
         <h2>How old is your athlete?</h2>
         <p class="sub small">We tailor every session to their age and stage.</p>
-        <button class="opt" data-field="age_group" data-val="6-8">6 – 8 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="9-11">9 – 11 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="12-14">12 – 14 years <span class="arw">→</span></button>
-        <button class="opt" data-field="age_group" data-val="15+">15+ years <span class="arw">→</span></button>
-        <button class="back" data-back>← Back</button>
+        <button class="opt" data-field="age_group" data-val="6-8">6 &ndash; 8 years <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="age_group" data-val="9-11">9 &ndash; 11 years <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="age_group" data-val="12-14">12 &ndash; 14 years <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="age_group" data-val="High school">High school <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="age_group" data-val="College / Pro">College or pro <span class="arw">&rarr;</span></button>
+        <button class="back" data-back>&larr; Back</button>
       </div></section>
 
-      <!-- STEP 3 -->
+      <!-- STEP 3 — LEVEL (exit: never played) -->
       <section class="step" data-step="3"><div class="pad">
-        <h2>What's their current level?</h2>
-        <p class="sub small">Every level is welcome — beginners to elite.</p>
-        <button class="opt" data-field="level" data-val="Never Played">Just starting out <span class="arw">→</span></button>
-        <button class="opt" data-field="level" data-val="Recreational">Recreational <span class="arw">→</span></button>
-        <button class="opt" data-field="level" data-val="Club / School Team">Club / School team <span class="arw">→</span></button>
-        <button class="opt" data-field="level" data-val="Competitive">Competitive / Elite <span class="arw">→</span></button>
-        <button class="back" data-back>← Back</button>
+        <h2>What&rsquo;s their current level?</h2>
+        <p class="sub small">This tells us which coach and group is the right starting point.</p>
+        <button class="opt" data-field="level" data-val="Never Played" data-dq="never played">Never played / just starting out <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="level" data-val="Recreational / Club / School">Recreational, club or school team <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="level" data-val="Competitive / Elite">Competitive / elite <span class="arw">&rarr;</span></button>
+        <button class="back" data-back>&larr; Back</button>
       </div></section>
 
-      <!-- STEP 4 -->
+      <!-- STEP 4 — AREA -->
       <section class="step" data-step="4"><div class="pad">
-        <h2>Which location works best?</h2>
-        <button class="opt" data-field="location" data-val="Nashville">Nashville <span class="arw">→</span></button>
-        <button class="opt" data-field="location" data-val="Franklin">Franklin <span class="arw">→</span></button>
-        <button class="opt" data-field="location" data-val="Hendersonville">Hendersonville <span class="arw">→</span></button>
-        <button class="opt" data-field="location" data-val="Mt. Juliet">Mt. Juliet <span class="arw">→</span></button>
-        <button class="back" data-back>← Back</button>
+        <h2>What area are you from?</h2>
+        <p class="sub small">So we can point you at the closer of our two locations.</p>
+        <button class="opt" data-field="location" data-val="Nashville">Nashville <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="location" data-val="Franklin">Franklin <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="location" data-val="Hendersonville">Hendersonville <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="location" data-val="Mt. Juliet">Mt. Juliet <span class="arw">&rarr;</span></button>
+        <button class="back" data-back>&larr; Back</button>
       </div></section>
 
-      <!-- STEP 5 -->
+      <!-- STEP 5 — COMMITMENT (exit: no) -->
       <section class="step" data-step="5"><div class="pad">
-        <h2>Perfect — where do we send the details?</h2>
-        <p class="sub small">We'll text you to lock in your trial time.</p>
+        <h2>Our training runs in 3-month blocks</h2>
+        <p class="sub small">That&rsquo;s the minimum for this program &mdash; it&rsquo;s how long real change takes. Does that work for your family?</p>
+        <button class="opt" data-field="commitment" data-val="Yes">Yes, that works for us <span class="arw">&rarr;</span></button>
+        <button class="opt" data-field="commitment" data-val="One-off only" data-dq="no commitment">We&rsquo;re only after a one-off session <span class="arw">&rarr;</span></button>
+        <button class="back" data-back>&larr; Back</button>
+      </div></section>
+
+      <!-- STEP 6 — CONTACT -->
+      <section class="step" data-step="6"><div class="pad">
+        <h2>Perfect &mdash; where do we send the details?</h2>
+        <p class="sub small">We&rsquo;ll text you to lock in your trial time.</p>
         <form id="leadForm" novalidate>
           <div class="row">
             <div><label>Your first name</label><input name="first_name" autocomplete="given-name" required></div>
@@ -140,23 +170,36 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
           </div>
           <label>Email</label><input name="email" type="email" autocomplete="email" required>
           <label>Phone</label><input name="phone" type="tel" autocomplete="tel" required>
-          <label>Child's first name</label><input name="child_name" placeholder="So we can personalize your session" required>
-          <div class="err" id="err">Please fill in every field, including your child's name.</div>
-          <button class="btn" type="submit" id="submitBtn" style="margin-top:20px">Book My Trial Session</button>
+          <label>Child&rsquo;s first name</label><input name="child_name" placeholder="So we can personalize your session" required>
+          <div class="err" id="err">Please fill in every field, including your child&rsquo;s name.</div>
+          <button class="btn" type="submit" id="submitBtn" style="margin-top:20px">Claim My Child&rsquo;s Session</button>
           <p class="fine">By submitting you agree to be contacted about training. No spam, ever.</p>
         </form>
-        <div class="quote">"Best investment we've made — our son's skill and confidence jumped in the <b>first month</b>." <br>— Futbol Factory parent</div>
-        <button class="back" data-back>← Back</button>
+        <img class="midimg" src="img/action.jpg" alt="Futbol Factory training session">
+        <div class="quotes">
+          <div class="quote">&ldquo;Best investment we&rsquo;ve made &mdash; our son&rsquo;s skill and confidence jumped in the <b>first month</b>.&rdquo;<cite>&mdash; Futbol Factory parent</cite></div>
+        </div>
+        <button class="back" data-back>&larr; Back</button>
       </div></section>
 
-      <!-- STEP 6 -->
-      <section class="step" data-step="6"><div class="pad center">
-        <div class="tick">✓</div>
-        <h2>You're in! 🎉</h2>
-        <p class="sub">We'll text you shortly — just reply <strong>YES</strong> and we'll get you booked. Keep an eye on your phone!</p>
+      <!-- STEP 7 — ACCEPTED -->
+      <section class="step" data-step="7"><div class="pad center">
+        <div class="tick">&#10003;</div>
+        <h2>Congratulations &mdash; you&rsquo;re accepted!</h2>
+        <p class="sub">We&rsquo;ll reach out shortly to schedule your trial session. Just reply <strong>YES</strong> to that first text and you&rsquo;ll be talking to a human.</p>
         <img src="img/action.jpg" alt="Futbol Factory training" style="width:100%;border-radius:12px;margin-top:6px">
       </div></section>
+
+      <!-- STEP 8 — NOT A FIT (no lead event, no CRM record) -->
+      <section class="step softout" data-step="8"><div class="pad center">
+        <div class="tick">&mdash;</div>
+        <h2>Not the right fit &mdash; yet</h2>
+        <p class="sub">Our programs are built for players already in the game who can train consistently for at least three months. From your answers, we wouldn&rsquo;t be the right place for you right now &mdash; and we&rsquo;d rather say so than sell you something that won&rsquo;t work.</p>
+        <p class="sub">That changes fast at this age. Once they&rsquo;re playing regularly, come back and see us.</p>
+        <a class="linkbtn" href="https://futbol-factory.com" target="_blank" rel="noopener">More about Futbol Factory &rarr;</a>
+      </div></section>
     </div>
+
     <div class="tag" style="text-align:center;opacity:.6">Futbol Factory · Nashville, TN</div>
   </div>
 
@@ -164,7 +207,8 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
 /* ---------- funnel analytics (fire-and-forget; never blocks the form) ---------- */
 var FF = (function(){
   var ENDPOINT = "https://fsbzdnstyvsyirlcyjiw.supabase.co/functions/v1/ff-track";
-  var STEP_NAMES = {1:"Landing",2:"Age",3:"Level",4:"Location",5:"Contact form",6:"Submitted"};
+  var STEP_NAMES = {1:"Landing",2:"Age",3:"Level",4:"Area",5:"Commitment",
+                    6:"Contact form",7:"Submitted",8:"Not a fit"};
   var t0 = Date.now(), queue = [], timer = null, sent = false, ctx = {}, sid = "";
 
   function uuid(){
@@ -242,36 +286,52 @@ var FF = (function(){
 
   FF.track("page_view", {step:1});
 
-  var steps=[].slice.call(document.querySelectorAll(".step")), total=steps.length, cur=1, deepest=1;
+  var steps=[].slice.call(document.querySelectorAll(".step"));
+  var LAST=7, DQ=8, cur=1, deepest=1;   // step 8 is the not-a-fit screen, not part of the funnel
   function show(n){cur=n;steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
-    document.getElementById("bar").style.width=Math.round((n-1)/(total-1)*100)+"%";
+    var pr=document.getElementById("bar").parentNode;
+    if(n===DQ){ pr.style.visibility="hidden"; }
+    else { pr.style.visibility="visible";
+           document.getElementById("bar").style.width=Math.round((n-1)/(LAST-1)*100)+"%"; }
     window.scrollTo({top:0,behavior:"smooth"});
-    if(n>deepest){ deepest=n; FF.track("step_view",{step:n}); }}
+    if(n<=LAST && n>deepest){ deepest=n; FF.track("step_view",{step:n}); }}
+
+  // Turn someone away: no lead event, no CRM record, nothing sent to Meta.
+  function disqualify(reason){
+    FF.track("disqualified",{step:cur, field:"reason", value:reason});
+    FF.flush(false);
+    steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===DQ);});
+    document.getElementById("bar").parentNode.style.visibility="hidden";
+    window.scrollTo({top:0,behavior:"smooth"});
+    cur=DQ;
+  }
+
   document.querySelectorAll("[data-next]").forEach(function(b){b.onclick=function(){show(cur+1);};});
   document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){FF.track("back",{step:cur});show(cur-1);};});
   document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
     data[b.dataset.field]=b.dataset.val;
     FF.track("answer",{step:cur, field:b.dataset.field, value:b.dataset.val});
+    if(b.dataset.dq){ disqualify(b.dataset.dq); return; }
     show(cur+1);};});
   var form=document.getElementById("leadForm"),errEl=document.getElementById("err"),btn=document.getElementById("submitBtn");
   var formStarted=false;
-  form.addEventListener("focusin",function(){ if(!formStarted){ formStarted=true; FF.track("form_start",{step:5}); } });
+  form.addEventListener("focusin",function(){ if(!formStarted){ formStarted=true; FF.track("form_start",{step:6}); } });
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var fd=new FormData(form);
     var first=(fd.get("first_name")||"").trim(),last=(fd.get("last_name")||"").trim(),email=(fd.get("email")||"").trim(),phone=(fd.get("phone")||"").trim(),child=(fd.get("child_name")||"").trim();
-    FF.track("submit_attempt",{step:5});
+    FF.track("submit_attempt",{step:6});
     if(!first||!last||!email||!phone||!child||email.indexOf("@")<0){
       errEl.style.display="block";
-      FF.track("submit_error",{step:5, value:"validation"});
+      FF.track("submit_error",{step:6, value:"validation"});
       return;}
     errEl.style.display="none";
     ["first_name","last_name","email","phone","child_name"].forEach(function(k){if(fd.get(k))data[k]=(fd.get(k)+"").trim();});
     try{if(window.fbq)fbq("track","Lead");}catch(e){}
-    FF.track("submit_success",{step:6});
+    FF.track("submit_success",{step:7});
     FF.flush(false);
     btn.disabled=true;btn.textContent="Booking…";
-    fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)}).catch(function(){}).finally(function(){show(6);});
+    fetch(WEBHOOK,{method:"POST",body:new URLSearchParams(data)}).catch(function(){}).finally(function(){show(7);});
   });
 </script>
 </body>

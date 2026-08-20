@@ -230,6 +230,16 @@ var FF = (function(){
                     6:"Contact form",7:"Submitted",8:"Not a fit"};
   var t0 = Date.now(), queue = [], timer = null, sent = false, ctx = {}, sid = "";
 
+  // Meta encodes url_tags values, then encodes the whole string again, so a
+  // campaign name arrives as "FF+Trial+%E2%80%94+..." after one decode pass.
+  // Decode a second time when the value still looks encoded.
+  function tidy(v){
+    try{ if(/%[0-9A-Fa-f]{2}/.test(v) || v.indexOf("+")>-1)
+           return decodeURIComponent(v.replace(/\+/g," ")); }catch(e){}
+    return v;
+  }
+
+
   function uuid(){
     try{ if(crypto && crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){
@@ -242,7 +252,7 @@ var FF = (function(){
     var q = new URLSearchParams(location.search);
     ["utm_source","utm_medium","utm_campaign","utm_content","utm_term",
      "fbclid","ad_id","adset_id","campaign_id"].forEach(function(k){
-      var v = q.get(k); if(v) ctx[k] = v;
+      var v = q.get(k); if(v) ctx[k] = tidy(v);
     });
     if(!ctx.utm_source) ctx.utm_source = "facebook";
     ctx.funnel     = "ff-trial-funnel";
@@ -288,7 +298,7 @@ var FF = (function(){
     });
   }catch(e){}
 
-  return {track:track, sid:function(){ return sid; }, flush:flush};
+  return {track:track, sid:function(){ return sid; }, flush:flush, tidy:tidy};
 })();
 
 /* ---------- funnel ---------- */
@@ -296,8 +306,9 @@ var FF = (function(){
   var data = {};
   (function(){
     var q = new URLSearchParams(location.search);
-    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid"].forEach(function(k){
-      var v=q.get(k); if(v) data[k]=v;
+    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid",
+     "ad_id","adset_id","campaign_id"].forEach(function(k){
+      var v=q.get(k); if(v) data[k]=FF.tidy(v);
     });
     if(!data.utm_source) data.utm_source="facebook";
     data.ff_session_id = FF.sid();

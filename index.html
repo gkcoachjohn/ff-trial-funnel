@@ -32,18 +32,18 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:radial-gradient(1100px 520px at 50% -8%, #1c1d20 0%, var(--bg) 58%);
     color:var(--txt);min-height:100dvh;display:flex;flex-direction:column;align-items:center;
-    padding:18px 14px calc(20px + env(safe-area-inset-bottom));line-height:1.45;
+    padding:12px 14px calc(20px + env(safe-area-inset-bottom));line-height:1.45;
   }
-  .wrap{width:100%;max-width:480px;margin:auto;display:flex;flex-direction:column;gap:16px}
+  .wrap{width:100%;max-width:480px;margin:auto;display:flex;flex-direction:column;gap:12px}
   .brandbar{display:flex;flex-direction:column;align-items:center;gap:8px}
-  .brandbar img{width:60px;height:60px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.28)}
+  .brandbar img{width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.28)}
   .tag{font-size:10.5px;letter-spacing:3px;color:var(--muted);font-weight:700;text-transform:uppercase}
   .progress{height:5px;background:#242529;border-radius:99px;overflow:hidden}
   .progress>i{display:block;height:100%;width:0;background:var(--white);transition:width .35s ease;border-radius:99px}
   .card{background:linear-gradient(180deg,var(--card1),var(--card2));border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5)}
   .pad{padding:24px 22px 24px}
-  .hero-img{width:100%;height:200px;object-fit:cover;object-position:center 58%;display:block;border-bottom:1px solid var(--line)}
+  .hero-img{width:100%;height:150px;object-fit:cover;object-position:center 72%;display:block;border-bottom:1px solid var(--line)}
   .step{display:none;animation:fade .35s ease}
   .step.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -75,6 +75,11 @@
   .tick{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
   .err{color:#f2a3a3;font-size:13px;margin-top:10px;display:none}
   .center{text-align:center}
+  .reassure{font-size:12.5px;color:var(--muted);text-align:center;margin-top:10px}
+  .reassure b{color:#dcdde0;font-weight:700}
+  .proof{margin-top:14px}
+  .proof div{padding:9px 6px}
+  .proof b{font-size:15.5px}
   .proof{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
   .proof div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 8px;text-align:center}
   .proof b{display:block;font-size:17px;font-weight:800;color:var(--white);letter-spacing:-.3px}
@@ -119,16 +124,19 @@ src="https://www.facebook.com/tr?id=2232905767094511&ev=PageView&noscript=1"/></
         <img class="hero-img" src="img/hero.jpg" fetchpriority="high" alt="Futbol Factory Nashville players and coaches">
         <div class="pad">
           <h1>Claim a Trial Session at Futbol Factory</h1>
-          <p class="sub">One hour, one-on-one with a Futbol Factory coach. They&rsquo;ll assess where your child is right now and build a plan from there. Nashville&rsquo;s youth soccer academy, training 120+ players a week.</p>
+          <p class="sub">One hour, one-on-one with a coach who&rsquo;ll show you exactly where your child stands.</p>
           <button class="btn" data-next>Claim My Trial Session &rarr;</button>
+          <p class="reassure">Takes about <b>30 seconds</b> &middot; Nothing to pay today</p>
           <div class="proof">
             <div><b>120+</b><span>players trained weekly</span></div>
             <div><b>2</b><span>Nashville locations</span></div>
             <div><b>6&ndash;18</b><span>ages we train</span></div>
           </div>
-          <img class="midimg" src="img/game.jpg" loading="lazy" decoding="async" alt="Futbol Factory players in a small-sided game" style="object-position:center 62%">
           <div class="quotes">
             <div class="quote">&ldquo;Training with Coach John helped me <b>make the academy team</b> and get the starting goalkeeper spot.&rdquo;<cite>&mdash; Christopher, age 15</cite></div>
+          </div>
+          <img class="midimg" src="img/game.jpg" loading="lazy" decoding="async" alt="Futbol Factory players in a small-sided game" style="object-position:center 62%">
+          <div class="quotes">
             <div class="quote">&ldquo;Ben had his best goal I&rsquo;ve ever seen today in a victory. Wouldn&rsquo;t have been able to do it without working with you John.&rdquo;<cite>&mdash; parent of Ben, age 10</cite></div>
           </div>
           <div class="trust"><span>&#9917; Private &amp; small group</span><span>&#128100; Custom plan per player</span><span>&#128241; App access included</span></div>
@@ -294,7 +302,15 @@ var FF = (function(){
 
   // Flush whatever is buffered the moment the visitor leaves.
   try{
-    window.addEventListener("pagehide", function(){ if(!sent){ sent = true; flush(true); } });
+    window.addEventListener("pagehide", function(){
+      if(!sent){
+        sent = true;
+        // Records how long they stayed, so a 2-second misclick can be told
+        // apart from someone who read the page and decided against it.
+        try{ track("exit", {step: (window.__ffStep || 1)}); }catch(e){}
+        flush(true);
+      }
+    });
     document.addEventListener("visibilitychange", function(){
       if(document.visibilityState === "hidden") flush(true);
     });
@@ -319,6 +335,10 @@ var FF = (function(){
   })();
 
   FF.track("page_view", {step:1});
+  // step 1 is active straight from the HTML, so show() never runs for it —
+  // hide the empty progress track here or it renders on the landing screen.
+  (function(){ var b=document.getElementById("bar");
+               if(b) b.parentNode.style.display="none"; })();
 
   var steps=[].slice.call(document.querySelectorAll(".step"));
   var LAST=7, DQ=8, cur=1, deepest=1;   // step 8 is the not-a-fit screen, not part of the funnel
@@ -329,8 +349,10 @@ var FF = (function(){
       i.src=i.dataset.src; i.removeAttribute("data-src");
     });
   }
-  function show(n){cur=n;loadImgs(n);steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
+  function show(n){cur=n;window.__ffStep=n;loadImgs(n);steps.forEach(function(s){s.classList.toggle("active",+s.dataset.step===n);});
     var pr=document.getElementById("bar").parentNode;
+    // An empty progress track on the landing screen just signals "long form".
+    pr.style.display = (n===1) ? "none" : "block";
     if(n===DQ){ pr.style.visibility="hidden"; }
     else { pr.style.visibility="visible";
            document.getElementById("bar").style.width=Math.round((n-1)/(LAST-1)*100)+"%"; }
